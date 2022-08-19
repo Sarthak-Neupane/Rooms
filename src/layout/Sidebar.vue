@@ -9,7 +9,7 @@ const props = defineProps(["path"])
 const route = useRoute();
 
 const currentRoute = computed(() => {
-  if(route.name === "Rooms" || route.name === "Profile" || route.name === "Friends")
+  if(route.name === "Rooms" || route.name === "Profile" || route.name === "Friends" || route.name === "CreateRoom")
   {
     return true
   }

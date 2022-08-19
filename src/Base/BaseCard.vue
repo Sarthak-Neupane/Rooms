@@ -1,6 +1,6 @@
 <template>
   <div
-    class="p-3 bg-dark-primary block 2xl:max-w-lg xl:max-w-md md:max-w-sm sm:max-w-xs"
+    class="p-3 bg-dark-primary block 2xl:max-w-xl xl:max-w-lg md:max-w-md sm:max-w-sm"
   >
     <slot></slot>
   </div>

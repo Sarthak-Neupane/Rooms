@@ -8,6 +8,9 @@ import RoomChat from '../views/RoomInner/RoomChat.vue'
 import RoomReminders from '../views/RoomInner/RoomReminders.vue'
 import RoomFiles from '../views/RoomInner/RoomFiles.vue'
 
+
+import CreateRoom from '../views/CreateNewRoom/CreateRoom.vue'
+
 const routes = [
   {
     path: "/",
@@ -18,6 +21,13 @@ const routes = [
     path: "/rooms",
     name: "Rooms",
     component: Rooms,
+    children: [
+      {
+        path: 'create',
+        name: 'CreateRoom',
+        component: CreateRoom
+      }
+    ]
   },
   {
     path: "/profile",
