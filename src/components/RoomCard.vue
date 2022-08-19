@@ -4,7 +4,7 @@ import BaseButton from "../Base/BaseButton.vue"
 </script>
 
 <template>
-<router-link to="/inner">
+<router-link :to="{ name: 'Members' }">
   <card>
     <header>
       <h1 class="text-dark-text sm:my-7 lg:text-3xl md:text-2xl">THE SAT</h1>

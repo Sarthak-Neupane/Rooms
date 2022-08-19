@@ -4,7 +4,7 @@
   >
     <div>
       <p
-        class="text-dark-text mb-9 py-2 sm:pl-5 sm:text-sm lg:pl-7 xl:pl-10 2xl:pl-14 2xl:text-lg"
+        class="text-dark-primary mb-9 py-2 sm:pl-5 sm:text-sm lg:pl-7 xl:pl-10 2xl:pl-14 2xl:text-lg pointer-events-none select-none"
       >
         Back
       </p>
@@ -17,25 +17,14 @@
     </div>
     <div class="flex-auto mt-10">
       <ul>
-        <router-link to="/"
-          ><li
-            class="text-dark-text w-full sm:pl-5 sm:text-sm lg:pl-7 2xl:pl-14 2xl:text-lg py-3 bg-dark-secondary hover:bg-dark-secondary"
-          >
-            Rooms
-          </li></router-link
-        >
-        <router-link to="/profile">
+        <router-link v-for="data in roomData" :key="data" :to="{ name: data }">
           <li
-            class="text-dark-text w-full sm:pl-5 sm:text-sm lg:pl-7 2xl:pl-14 2xl:text-lg py-3 bg-dark-primary hover:bg-dark-secondary"
+            class="text-dark-text w-full sm:pl-5 sm:text-sm lg:pl-7 xl:pl-10 2xl:pl-14 2xl:text-lg py-3 hover:bg-dark-secondary"
+            :class="
+              currentRoute === data ? 'bg-dark-secondary' : 'bg-dark-primary'
+            "
           >
-            Profile
-          </li>
-        </router-link>
-        <router-link to="/friends">
-          <li
-            class="text-dark-text w-full sm:pl-5 sm:text-sm lg:pl-7 2xl:pl-14 2xl:text-lg py-3 bg-dark-primary hover:bg-dark-secondary"
-          >
-            Friends
+            {{ data }}
           </li>
         </router-link>
       </ul>
@@ -49,3 +38,15 @@
     </div>
   </aside>
 </template>
+
+<script setup>
+import { computed, ref } from "vue";
+import { useRoute } from "vue-router";
+const route = useRoute();
+
+const roomData = ref(["Rooms", "Profile", "Friends"]);
+
+const currentRoute = computed(() => {
+  return route.name;
+});
+</script>

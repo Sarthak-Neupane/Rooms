@@ -1,5 +1,5 @@
 <template>
-<p class="bg-slate-600">Profile</p>
+    <h1>Profile</h1>
 </template>
 
 <script setup></script>
