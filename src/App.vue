@@ -7,7 +7,7 @@
 
 <template>
   <div class="flex justify-between w-screen font-sans1">
-    <sidebar :path="route.path"> </sidebar>
+    <sidebar :path="route.path" v-if="route.meta.showSidebar"> </sidebar>
     <div class="flex-1">
       <router-view></router-view>
     </div>
