@@ -32,8 +32,9 @@
     <div class="">
       <p
         class="text-dark-text sm:pl-5 sm:text-sm lg:pl-7 2xl:pl-14 2xl:text-lg py-3"
+        @click="performSignOut()"
       >
-        Settings
+        Sign Out
       </p>
     </div>
   </aside>
@@ -41,12 +42,33 @@
 
 <script setup>
 import { computed, ref } from "vue";
-import { useRoute } from "vue-router";
+import { useRoute, useRouter } from "vue-router";
+import { useAuthStore } from "../store/Auth";
+
 const route = useRoute();
+const router = useRouter();
+const store = useAuthStore();
 
 const roomData = ref(["Rooms", "Profile", "Friends"]);
+
+const error = ref(false);
+const errorCode = ref();
+const errorMessage = ref();
 
 const currentRoute = computed(() => {
   return route.name;
 });
+
+async function performSignOut() {
+  try {
+    await store.signingOut();
+    localStorage.clear();
+    store.$reset();
+    router.replace({ name: "Login" });
+  } catch (error) {
+    error.value = true;
+    errorMessage.value = error.message;
+    console.log(errorMessage.value);
+  }
+}
 </script>

@@ -126,7 +126,7 @@
                   :name="Theme.name"
                   :for="Theme.name"
                   :id="Theme.name"
-                  :value="Theme.path"
+                  :value="Theme.name"
                   class="hidden"
                   v-model="displayTheme"
                   @input="checkDisplayTheme"
@@ -145,6 +145,12 @@
 import { ref } from "vue";
 import BaseCard from "../Base/BaseCard.vue";
 import BaseButton from "../Base/BaseButton.vue";
+
+import { useRoute, useRouter } from "vue-router";
+import { useUserStore } from "../store/User/index";
+
+const router = useRouter();
+const store = useUserStore();
 
 const selectedAvatar = ref(null);
 const selectedTheme = ref(null);
@@ -224,13 +230,13 @@ const Themes = ref([
 
 const AvatarClicked = (e) => {
   selectedAvatar.value = e.target.dataset.id;
-  displayPicture.value = e.target.parentElement.lastChild.value
-  checkDisplayPicture()
+  displayPicture.value = e.target.parentElement.lastChild.value;
+  checkDisplayPicture();
 };
 const themeClicked = (e) => {
   selectedTheme.value = e.target.dataset.id;
-  displayTheme.value = e.target.parentElement.lastChild.value
-  checkDisplayTheme()
+  displayTheme.value = e.target.parentElement.lastChild.value;
+  checkDisplayTheme();
 };
 
 const checkUsername = () => {
@@ -297,13 +303,29 @@ const validation = () => {
   }
 };
 
-const formSubmit = () => {
+const formSubmit = async () => {
   if (validation()) {
     console.log("everything is good");
-    console.log(username.value);
-    console.log(displayName.value);
-    console.log(displayPicture.value);
-    console.log(displayTheme.value);
+    try {
+      await store.updateUser({
+        username: username.value,
+        displayName: displayName.value,
+        displayPicture: displayPicture.value,
+        displayTheme: displayTheme.value,
+      });
+      try {
+        await store.addUserToDb();
+        router.replace({ name: "Rooms" });
+      } catch (error) {
+        error.value = true;
+        errorMessage.value = error.message;
+        console.log(errorMessage.value);
+      }
+    } catch (error) {
+      error.value = true;
+      errorMessage.value = error.message;
+      console.log(errorMessage.value);
+    }
   }
 };
 </script>

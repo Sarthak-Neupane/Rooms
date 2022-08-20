@@ -161,12 +161,13 @@ async function formSubmit() {
       const user = store.getUser;
       if (user) {
         console.log(user);
-        router.replace({ name: "Rooms" });
+        router.replace({ name: "Credentials" });
       }
     } catch (error) {
       error.value = true;
       errorMessage.value = error.message;
     }
+
   }
 }
 </script>
