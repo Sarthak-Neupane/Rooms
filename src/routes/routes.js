@@ -3,6 +3,7 @@ import { createRouter, createWebHistory } from "vue-router";
 import Auth from '../views/Auth.vue'
 import Login from '../components/Login.vue'
 import SignUp from '../components/SignUp.vue'
+import UserCredentials from '../views/UserCredentials.vue'
 
 import Rooms from '../views/Room.vue'
 import Profile from '../views/Profile.vue'
@@ -44,6 +45,14 @@ const routes = [
         component: SignUp
       },
     ]
+  },
+  {
+    path: "/credentials",
+    name: "Credentials",
+    component: UserCredentials,
+    meta: {
+      showSidebar: false
+    }
   },
   {
     path: "/rooms",
