@@ -1,7 +1,10 @@
 <template>
   <section class="flex gap-8 justify-center items-center">
     <base-card class="bg-dark-secondary p-7">
-      <form class="flex flex-col justify-center gap-7">
+      <form
+        class="flex flex-col justify-center gap-7"
+        @submit.prevent="formSubmit"
+      >
         <div class="flex flex-col justify-center-items-start gap-5">
           <label
             for="email"
@@ -61,26 +64,33 @@ import BaseButton from "../Base/BaseButton.vue";
 import Google from "../Icons/Igoogle.vue";
 
 import { ref } from "vue";
+import { useRouter, useRoute } from "vue-router";
+import { useAuthStore } from "../store/Auth";
 
-const email = ref()
-const password = ref()
+const router = useRouter();
+const store = useAuthStore();
 
-const checkEmail = ()=>{
+const error = ref(false)
+const errorMessage = ref()
 
-}
+const email = ref();
+const password = ref();
 
-const checkPassword = ()=>{
-
-}
-
-const validation = ()=>{
-
-}
-
-const formSubmit = ()=>{
-    if(validation()){
-        console.log('Everything is good')
-    }
-}
-
+async function formSubmit(){
+  try {
+    await store.login({
+      email: email.value,
+      password: password.value
+    })
+    const user = store.getUser
+    if(user){
+      console.log(user)
+      router.replace({ name: "Rooms" });
+    } 
+  } catch (error) {
+    error.value = true
+    errorMessage.value = error.message
+    console.log(errorMessage.value)
+  }
+};
 </script>
