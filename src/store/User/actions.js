@@ -3,7 +3,7 @@ import Firebase from "../../Firebase";
 import { useAuthStore } from "../Auth/index";
 import { updateProfile } from "firebase/auth";
 
-import { doc, setDoc } from "firebase/firestore";
+import { doc, setDoc, collection, getDocs, getDoc } from "firebase/firestore";
 
 export default {
   async updateUser(args) {
@@ -20,7 +20,8 @@ export default {
         args.displayPicture ||
         "https://ik.imagekit.io/8boruzan4f9/Avatars/Avatar__2__j7hTXzevw.svg?ik-sdk-version=javascript-1.4.3&updatedAt=1661001525186",
     });
-    return auth.user;
+
+    localStorage.setItem("User", JSON.stringify(auth.user));
   },
 
   async addUserToDb() {
@@ -38,7 +39,49 @@ export default {
         totalFiles: user.totalFiles,
       });
     } catch (e) {
-      console.log("Error adding document: ", e);
+      this.errorMessage = e.message || "Oops! an error occured. Try Again";
+    }
+  },
+
+  async addUsernameToDb() {
+    const auth = useAuthStore();
+    const user = auth.user;
+    try {
+      await setDoc(doc(Firebase.db, "Usernames", user.username), {
+        id: user.uid,
+      });
+    } catch (e) {
+      this.errorMessage = e.message || "Oops! an error occured. Try Again";
+    }
+  },
+
+  async checkUsername(username) {
+    const querySnapshot = await getDocs(collection(Firebase.db, "Usernames"));
+    const breakError = {};
+
+    try {
+      querySnapshot.forEach((doc) => {
+        if (username == doc.id) {
+          this.error = true;
+          throw breakError;
+        } else {
+          this.error = false;
+        }
+      });
+    } catch (err) {
+      if (err !== breakError) throw err;
+    }
+  },
+
+  async fetchUser(args) {
+    const docRef = doc(db, "Users", args.id);
+    const docSnap = await getDoc(docRef);
+
+    if (docSnap.exists()) {
+      console.log("Document data:", docSnap.data());
+    } else {
+      // doc.data() will be undefined in this case
+      console.log("No such document!");
     }
   },
 };

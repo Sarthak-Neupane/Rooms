@@ -20,7 +20,9 @@ import QuickAction from "../layout/QuickAction.vue";
 import RoomsContainer from "../layout/RoomsContainer.vue";
 
 import { useRouter } from "vue-router";
+import { useAuthStore } from "../store/Auth";
     const router = useRouter()
+    const authStore = useAuthStore()
 
     const btnClicked = () => {
         router.push({

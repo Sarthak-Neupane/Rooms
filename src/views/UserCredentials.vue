@@ -149,6 +149,7 @@ import BaseButton from "../Base/BaseButton.vue";
 import { useRoute, useRouter } from "vue-router";
 import { useUserStore } from "../store/User/index";
 
+
 const router = useRouter();
 const store = useUserStore();
 
@@ -162,6 +163,7 @@ const displayTheme = ref();
 
 const errorMessage = ref();
 const errorMessageRef = ref();
+
 
 const Avatars = ref([
   {
@@ -239,9 +241,21 @@ const themeClicked = (e) => {
   checkDisplayTheme();
 };
 
-const checkUsername = () => {
-  // send request to firestore to check if there are any matching usernames
-  return true;
+const checkUsername = async ()  => {
+  return new Promise(async (res, rej)=>{
+    await store.checkUsername(username.value)
+    const result = store.getError
+    if(username.value !== null && !result){
+      errorMessage.value = null;
+      errorMessageRef.value = null;
+      res(true)
+    } else {
+      errorMessage.value = "Username Already Taken";
+      errorMessageRef.value = 1;
+      rej(false)
+    }
+  })
+
 };
 
 const checkDisplayName = () => {
@@ -279,35 +293,44 @@ const checkDisplayTheme = () => {
   }
 };
 
-const validation = () => {
-  if (checkUsername()) {
-    if (checkDisplayName()) {
-      if (checkDisplayPicture()) {
-        if (checkDisplayTheme()) {
-          return true;
+const validation = async () => {
+
+  return new Promise(async (res, rej)=>{
+    const usernameCheck = await checkUsername()
+    if (usernameCheck) {
+      if (checkDisplayName()) {
+        if (checkDisplayPicture()) {
+          if (checkDisplayTheme()) {
+            res(true)
+            return true;
+          } else {
+            console.log(errorMessage.value);
+            rej(false)
+            return false;
+          }
         } else {
           console.log(errorMessage.value);
+          rej(false)
           return false;
         }
       } else {
         console.log(errorMessage.value);
+        rej(false)
         return false;
       }
     } else {
       console.log(errorMessage.value);
+      rej(false)
       return false;
     }
-  } else {
-    console.log(errorMessage.value);
-    return false;
-  }
+  })
 };
 
 const formSubmit = async () => {
-  if (validation()) {
-    console.log("everything is good");
+  const result = await validation()
+  if (result) {
     try {
-      await store.updateUser({
+      const user = await store.updateUser({
         username: username.value,
         displayName: displayName.value,
         displayPicture: displayPicture.value,
@@ -315,6 +338,7 @@ const formSubmit = async () => {
       });
       try {
         await store.addUserToDb();
+        await store.addUsernameToDb()
         router.replace({ name: "Rooms" });
       } catch (error) {
         error.value = true;

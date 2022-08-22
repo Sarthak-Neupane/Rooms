@@ -12,7 +12,7 @@
     <div class="flex justify-between items-center flex-col">
       <img src="../assets/Avatar.svg" class="w-32 xl:w-40 2xl:w-48" />
       <h1 class="text-dark-text py-2 sm:text-sm 2xl:text-lg">
-        SARTHAK NEUPANE
+        {{ store.user.displayName }}
       </h1>
     </div>
     <div class="flex-auto mt-10">

@@ -11,6 +11,8 @@
 <script setup>
     import Sidebar from "./layout/Sidebar.vue";
     import { useRouter, useRoute } from "vue-router";
+
+
     const router = useRouter()
     const route = useRoute()
 </script>

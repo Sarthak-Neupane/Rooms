@@ -1,3 +1,9 @@
+  <template>
+    <sidebar-outer v-if="currentRoute"></sidebar-outer>
+    <sidebar-inner v-else></sidebar-inner>
+  </template>
+
+  
 <script setup>
 import SidebarInner from './SidebarInner.vue'
 import SidebarOuter from './SidebarOuter.vue'
@@ -20,7 +26,3 @@ const currentRoute = computed(() => {
 
 </script>
 
-<template>
-  <sidebar-outer v-if="currentRoute"></sidebar-outer>
-  <sidebar-inner v-else></sidebar-inner>
-</template>

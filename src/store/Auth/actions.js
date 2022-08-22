@@ -13,28 +13,33 @@ export default {
       args.email,
       args.password
     );
-    this.user = {
-      ...userCredentials.user,
-      username: null,
-      displayTheme: null,
-      totalFiles: 0,
-      totalReminders: 0,
-      totalRooms: 0,
-    };
-    localStorage.setItem("User", JSON.stringify(this.user));
 
-    const db = useUserStore();
+    if (userCredentials) {
+      this.user = {
+        ...userCredentials.user,
+        username: null,
+        displayTheme: null,
+        totalFiles: 0,
+        totalReminders: 0,
+        totalRooms: 0,
+      };
+      localStorage.setItem("User", JSON.stringify(this.user));
 
-    const result = await db.updateUser({
-      username: this.user.username,
-      displayName: this.user.displayName,
-      displayPicture: this.user.photoURL,
-      displayTheme: this.user.displayTheme,
-    });
+      const userStore = useUserStore();
 
-    await db.addUserToDb();
+      await userStore.updateUser({
+        username: this.user.username,
+        displayName: this.user.displayName,
+        displayPicture: this.user.photoURL,
+        displayTheme: this.user.displayTheme,
+      });
+      
+      await userStore.addUserToDb();
 
-    localStorage.setItem("User", JSON.stringify(result));
+      localStorage.setItem("User", JSON.stringify(this.user));
+    } else {
+      this.errorMessage = "oops an error occured"
+    }
   },
   async login(args) {
     const userCredentials = await signInWithEmailAndPassword(

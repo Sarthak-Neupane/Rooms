@@ -6,6 +6,7 @@ import getters from './getters'
 export const useUserStore = defineStore("userStore", {
   state: () => {
     return {
+      error: false,
         errorCode: null,
         errorMessage: null
     };
