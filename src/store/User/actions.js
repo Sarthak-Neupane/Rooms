@@ -14,14 +14,6 @@ export default {
     auth.user.displayPicture =
       args.displayPicture ||
       "https://ik.imagekit.io/8boruzan4f9/Avatars/Avatar__2__j7hTXzevw.svg?ik-sdk-version=javascript-1.4.3&updatedAt=1661001525186";
-    
-    //   await updateProfile(Firebase.auth.currentUser, {
-    //   displayName: args.displayName || "guest101",
-    //   photoURL:
-    //     args.displayPicture ||
-    //     "https://ik.imagekit.io/8boruzan4f9/Avatars/Avatar__2__j7hTXzevw.svg?ik-sdk-version=javascript-1.4.3&updatedAt=1661001525186",
-    // });
-
     localStorage.setItem("User", JSON.stringify(auth.user));
   },
 
@@ -39,19 +31,19 @@ export default {
         totalReminders: user.totalReminders,
         totalFiles: user.totalFiles,
       });
-      console.log('user added')
     } catch (e) {
       this.errorMessage = e.message || "Oops! an error occured. Try Again";
     }
   },
-
+  
   async addUsernameToDb() {
     const auth = useAuthStore();
     const user = auth.user;
     try {
       await setDoc(doc(Firebase.db, "Usernames", user.username), {
-        id: user.id,
+        userRef: doc(Firebase.db, 'Users', user.id),
       });
+      console.log('username added')
     } catch (e) {
       this.errorMessage = e.message || "Oops! an error occured. Try Again";
     }
