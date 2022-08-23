@@ -14,12 +14,13 @@ export default {
     auth.user.displayPicture =
       args.displayPicture ||
       "https://ik.imagekit.io/8boruzan4f9/Avatars/Avatar__2__j7hTXzevw.svg?ik-sdk-version=javascript-1.4.3&updatedAt=1661001525186";
-    await updateProfile(Firebase.auth.currentUser, {
-      displayName: args.displayName || "guest101",
-      photoURL:
-        args.displayPicture ||
-        "https://ik.imagekit.io/8boruzan4f9/Avatars/Avatar__2__j7hTXzevw.svg?ik-sdk-version=javascript-1.4.3&updatedAt=1661001525186",
-    });
+    
+    //   await updateProfile(Firebase.auth.currentUser, {
+    //   displayName: args.displayName || "guest101",
+    //   photoURL:
+    //     args.displayPicture ||
+    //     "https://ik.imagekit.io/8boruzan4f9/Avatars/Avatar__2__j7hTXzevw.svg?ik-sdk-version=javascript-1.4.3&updatedAt=1661001525186",
+    // });
 
     localStorage.setItem("User", JSON.stringify(auth.user));
   },
@@ -28,8 +29,8 @@ export default {
     const auth = useAuthStore();
     const user = auth.user;
     try {
-      await setDoc(doc(Firebase.db, "User", user.uid), {
-        id: user.uid,
+      await setDoc(doc(Firebase.db, "Users", user.id), {
+        id: user.id,
         username: user.username,
         displayName: user.displayName,
         displayPicture: user.displayPicture,
@@ -38,6 +39,7 @@ export default {
         totalReminders: user.totalReminders,
         totalFiles: user.totalFiles,
       });
+      console.log('user added')
     } catch (e) {
       this.errorMessage = e.message || "Oops! an error occured. Try Again";
     }
@@ -48,7 +50,7 @@ export default {
     const user = auth.user;
     try {
       await setDoc(doc(Firebase.db, "Usernames", user.username), {
-        id: user.uid,
+        id: user.id,
       });
     } catch (e) {
       this.errorMessage = e.message || "Oops! an error occured. Try Again";
@@ -74,13 +76,13 @@ export default {
   },
 
   async fetchUser(args) {
-    const docRef = doc(db, "Users", args.id);
+    console.log(args)
+    const docRef = doc(Firebase.db, "Users", args.id);
     const docSnap = await getDoc(docRef);
 
     if (docSnap.exists()) {
-      console.log("Document data:", docSnap.data());
+      return docSnap.data()
     } else {
-      // doc.data() will be undefined in this case
       console.log("No such document!");
     }
   },

@@ -62,9 +62,9 @@ const currentRoute = computed(() => {
 async function performSignOut() {
   try {
     await store.signingOut();
+    router.replace({ name: "Login" });
     localStorage.clear();
     store.$reset();
-    router.replace({ name: "Login" });
   } catch (error) {
     error.value = true;
     errorMessage.value = error.message;

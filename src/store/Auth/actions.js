@@ -16,13 +16,16 @@ export default {
 
     if (userCredentials) {
       this.user = {
-        ...userCredentials.user,
+        displayName: userCredentials.user.displayName,
+        displayPicture: userCredentials.user.photoURL,
+        id: userCredentials.user.uid,
         username: null,
         displayTheme: null,
         totalFiles: 0,
         totalReminders: 0,
         totalRooms: 0,
       };
+      
       localStorage.setItem("User", JSON.stringify(this.user));
 
       const userStore = useUserStore();
@@ -30,15 +33,14 @@ export default {
       await userStore.updateUser({
         username: this.user.username,
         displayName: this.user.displayName,
-        displayPicture: this.user.photoURL,
+        displayPicture: this.user.displayPicture,
         displayTheme: this.user.displayTheme,
       });
-      
+
       await userStore.addUserToDb();
 
-      localStorage.setItem("User", JSON.stringify(this.user));
     } else {
-      this.errorMessage = "oops an error occured"
+      this.errorMessage = "oops an error occured";
     }
   },
   async login(args) {
@@ -47,8 +49,20 @@ export default {
       args.email,
       args.password
     );
-    this.user = userCredentials;
-    localStorage.setItem("User", JSON.stringify(this.user));
+    // this.user = userCredentials;
+
+    console.log(userCredentials);
+
+    const userStore = useUserStore();
+
+    const user = await userStore.fetchUser({
+      id: userCredentials.user.uid,
+    });
+
+    if (user) {
+      this.user = user;
+      localStorage.setItem("User", JSON.stringify(this.user));
+    }
   },
   async signingOut() {
     await signOut(Firebase.auth);
