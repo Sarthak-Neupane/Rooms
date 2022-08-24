@@ -3,7 +3,7 @@ import Firebase from "../../Firebase";
 import { useAuthStore } from "../Auth/index";
 import { updateProfile } from "firebase/auth";
 
-import { doc, setDoc, collection, getDocs, getDoc } from "firebase/firestore";
+import { doc, setDoc, collection, getDocs, getDoc, updateDoc } from "firebase/firestore";
 
 export default {
   async updateUser(args) {
@@ -34,6 +34,20 @@ export default {
     } catch (e) {
       this.errorMessage = e.message || "Oops! an error occured. Try Again";
     }
+  },
+
+  async addRoomCollection(args){
+    const authStore = useAuthStore()
+    await setDoc(doc(Firebase.db, `Users/${authStore.user.id}/Rooms`, args.id), {
+      roomRef: doc(Firebase.db, 'Rooms', args.id)
+    })
+  },
+
+  async UpdateUserDb(args){
+    const authStore = useAuthStore()
+    const docRef = doc(Firebase.db, "Users", authStore.user.id);
+
+    await updateDoc(docRef, args)
   },
   
   async addUsernameToDb() {

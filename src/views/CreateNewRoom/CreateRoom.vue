@@ -103,8 +103,10 @@ import BaseButton from "../../Base/BaseButton.vue";
 
 import { useRouter } from "vue-router";
 import { ref } from "vue";
+import { useRoomStore } from "../../store/Rooms";
 
 const router = useRouter();
+const roomStore = useRoomStore()
 
 const roomName = ref();
 const roomDesc = ref();
@@ -190,11 +192,24 @@ const validation = () => {
   }
 };
 
-const formSubmit = () => {
+const formSubmit = async () => {
   if(validation()){
     console.log(roomName.value)
     console.log(roomDesc.value)
     console.log(roomType.value)
+
+    try {      
+      await roomStore.addRoomTodb({
+        name: roomName.value,
+        description: roomDesc.value,
+        type: roomType.value
+      })
+      formClosed()
+    } catch (error) {
+      console.log(error)
+      errorMessage.value = error.message
+      console.log(errorMessage.value)
+    }
   } else {
     console.log(errorMessage.value)
   }
